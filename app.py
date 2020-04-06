@@ -68,7 +68,6 @@ def deleteEmp(empId):
     return jsonify({'response':'Success'})
 
 
-#()()()()()()()()()()()(+++++++ Covid Prediction JPS +++++++  )()()()()()()()()()()()()()()()
 @app.route('/predict/values/test', methods=['GET'])  
 def predictedValueTest():
     student1 ={'name':'sasadara','Maths':85,'Chemistry':95,'Physics':80}
@@ -82,13 +81,21 @@ def predictedValueTest():
     myList.append(student2)
     return jsonify(myList)
 
+
+############################################################################################
+#()()()()()()()()()()()(+++++++ Covid Prediction JPS +++++++  )()()()()()()()()()()()()()()()
+############################################################################################
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
-@app.route('/predict/values', methods=['GET'])  
+@app.route('/predict/values', methods=['POST'])  
 def predictedValue():
+   # {
+   #    "day":21
+   # }
+
     dataset=pd.read_csv('COVID-19 SL 03-11 to 03-24.csv').values
     data=dataset[:,0].reshape(-1,1)
     target=dataset[:,1].reshape(-1,1)
@@ -98,13 +105,18 @@ def predictedValue():
     algorithm.fit(data_new,target)
     #print('Coefficients:',algorithm.coef_)
     #print('Intercept:',algorithm.intercept_)
-    test_data=np.arange(15,26).reshape(-1,1)
-    test_data_new=poly.fit_transform(test_data)
-    predicted_target_next_10_days=algorithm.predict(test_data_new)
-    print(predicted_target_next_10_days[2][0])
-    Dates=pd.date_range(start="2020-03-11",end="2020-04-05").strftime('%m/%d')
-    return str(Dates[2])
+    
+    dayNo = request.json['day']
+        
+    test_data_new=poly.fit_transform([[dayNo]])
+    predicted_target_next_days=algorithm.predict(test_data_new)
+    
+    return str(predicted_target_next_days[0][0])
+###########################################################################################
 #()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
+###########################################################################################
+
+
 
 # main driver function 
 if __name__ == '__main__': 
