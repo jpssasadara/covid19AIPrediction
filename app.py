@@ -67,7 +67,21 @@ def deleteEmp(empId):
     empDB.remove(em[0])
     return jsonify({'response':'Success'})
 
-  
+
+#()()()()()()()()()()()(+++++++ Covid Prediction JPS +++++++  )()()()()()()()()()()()()()()()
+@app.route('/predict/values', methods=['GET'])  
+def predictedValue():
+    student1 ={'name':'sasadara','Maths':85,'Chemistry':95,'Physics':80}
+    student1['name'] = 'sahas'
+    student1['English']=100
+    student2 ={'name':'sasadara','Maths':99,'Chemistry':95,'Physics':96}
+    student2['name'] = 'sasadara'
+    student2['English']=100
+    myList = []
+    myList.append(student1)
+    myList.append(student2)
+    return jsonify(myList)
+#()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()()
 
 # main driver function 
 if __name__ == '__main__': 
